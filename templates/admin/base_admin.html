@@ -3,13 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{% block title %}Админка{% endblock %} — Buryatia Esports</title>
+<title>{% block title %}Админка{% endblock %} — Федерация киберспорта Республики Бурятия</title>
+<link rel="icon" href="{{ url_for('static', filename='img/flag-buryatia.svg') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 <div class="admin-shell">
   <div class="admin-sidebar">
-    <a href="{{ url_for('index') }}" class="logo">BURYATIA<span style="color:var(--accent)">ESPORTS</span></a>
+    <a href="{{ url_for('index') }}" class="logo" style="display:flex;align-items:center;gap:8px;margin-bottom:20px">
+      <img src="{{ url_for('static', filename='img/flag-buryatia.svg') }}" style="width:28px;height:19px;border-radius:2px;flex-shrink:0" alt="Флаг Бурятии">
+      <span style="font-size:12px;line-height:1.2;font-weight:800">ФКР<br>БУРЯТИЯ</span>
+    </a>
     <a href="{{ url_for('admin_dashboard') }}" class="{{ 'active' if request.endpoint=='admin_dashboard' }}">📊 Дашборд</a>
     <a href="{{ url_for('admin_news') }}" class="{{ 'active' if request.endpoint=='admin_news' }}">📰 Новости</a>
     <a href="{{ url_for('admin_players') }}" class="{{ 'active' if request.endpoint=='admin_players' }}">🎮 Игроки</a>

@@ -3,14 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{% block title %}Киберспорт Бурятии{% endblock %}</title>
+<title>{% block title %}Федерация киберспорта Республики Бурятия{% endblock %}</title>
+<link rel="icon" href="{{ url_for('static', filename='img/flag-buryatia.svg') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
 <header class="topbar">
   <div class="topbar-inner">
-    <a href="{{ url_for('index') }}" class="logo">BURYATIA<span>ESPORTS</span></a>
+    <a href="{{ url_for('index') }}" class="logo">
+      <img src="{{ url_for('static', filename='img/flag-buryatia.svg') }}" class="logo-flag" alt="Флаг Бурятии">
+      <span class="logo-text">ФЕДЕРАЦИЯ КИБЕРСПОРТА<br><span>РЕСПУБЛИКИ БУРЯТИЯ</span></span>
+    </a>
     <nav class="mainnav">
       <a href="{{ url_for('index') }}">Главная</a>
       <a href="{{ url_for('news_list') }}">Новости</a>
@@ -37,7 +41,7 @@
 
 <footer>
   <div class="container">
-    Buryatia Esports © 2026 — платформа местного киберспорта Республики Бурятия
+    Федерация киберспорта Республики Бурятия © 2026 — новости, статистика, команды и турниры местной киберспортивной сцены
   </div>
 </footer>
 
