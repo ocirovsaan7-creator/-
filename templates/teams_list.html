@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Команды — Buryatia Esports{% endblock %}
+{% block content %}
+<section class="container">
+  <div class="section-title">
+    <h2>Команды</h2>
+    <a href="{{ url_for('team_register') }}" class="btn btn-accent btn-sm">+ Зарегистрировать команду</a>
+  </div>
+  <div class="grid grid-4">
+    {% for t in teams %}
+    <a href="{{ url_for('team_detail', team_id=t.id) }}" class="card">
+      <img class="card-img" style="height:120px;object-fit:contain;background:#12151a;padding:14px"
+           src="{{ url_for('static', filename=t.logo) if t.logo else 'https://placehold.co/300x160/1b1f28/8b93a1?text=' + t.name }}">
+      <div class="card-body">
+        <span class="tag">{{ t.game or 'Esports' }}</span>
+        <h3>{{ t.name }} {% if t.tag %}<span style="color:var(--muted);font-weight:400">[{{ t.tag }}]</span>{% endif %}</h3>
+        <p>{{ t.city }}</p>
+      </div>
+    </a>
+    {% else %}
+    <p style="color:var(--muted)">Команд пока нет. Будьте первыми!</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

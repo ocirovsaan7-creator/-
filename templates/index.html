@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Киберспорт Бурятии — новости, команды, турниры{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="container">
+    <h1>Киберспорт <span>Республики Бурятия</span></h1>
+    <p>Новости, статистика игроков, рейтинг команд и турниры местной киберспортивной сцены — всё в одном месте.</p>
+  </div>
+</section>
+
+<section class="container">
+  <div class="section-title">
+    <h2>Новости</h2>
+    <a href="{{ url_for('news_list') }}">Все новости →</a>
+  </div>
+  <div class="grid grid-3">
+    {% for item in news %}
+    <a href="{{ url_for('news_detail', news_id=item.id) }}" class="card">
+      <img class="card-img" src="{{ url_for('static', filename=item.cover) if item.cover else 'https://placehold.co/400x200/1b1f28/8b93a1?text=Новость' }}">
+      <div class="card-body">
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.summary or '' }}</p>
+        <div class="meta">{{ item.published_at.strftime('%d.%m.%Y') }}</div>
+      </div>
+    </a>
+    {% else %}
+    <p style="color:var(--muted)">Новостей пока нет.</p>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="container">
+  <div class="section-title">
+    <h2>Ближайшие турниры</h2>
+    <a href="{{ url_for('tournaments_list') }}">Все турниры →</a>
+  </div>
+  <div class="grid grid-4">
+    {% for t in upcoming %}
+    <a href="{{ url_for('tournament_detail', tournament_id=t.id) }}" class="card">
+      <img class="card-img" src="{{ url_for('static', filename=t.cover) if t.cover else 'https://placehold.co/400x200/1b1f28/ff6a00?text=Турнир' }}">
+      <div class="card-body">
+        <span class="tag">{{ t.game or 'Esports' }}</span>
+        <h3>{{ t.title }}</h3>
+        <p>Призовой фонд: {{ t.prize_pool or '—' }}</p>
+        <div class="meta">{{ t.start_date.strftime('%d.%m.%Y') if t.start_date else '' }}</div>
+      </div>
+    </a>
+    {% else %}
+    <p style="color:var(--muted)">Турниров пока нет.</p>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="container">
+  <div class="section-title">
+    <h2>Топ игроков</h2>
+    <a href="{{ url_for('players_list') }}">Все игроки →</a>
+  </div>
+  <div class="grid grid-4">
+    {% for p in top_players %}
+    <a href="{{ url_for('player_detail', player_id=p.id) }}" class="card player-card">
+      <img src="{{ url_for('static', filename=p.photo) if p.photo else 'https://placehold.co/100x100/1b1f28/8b93a1?text=?' }}">
+      <div class="nick">{{ p.nickname }}</div>
+      <div class="stat">{{ p.game or '' }} {% if p.team %}· {{ p.team.name }}{% endif %}</div>
+      <div class="rating-badge">Rating {{ '%.2f'|format(p.rating) }}</div>
+    </a>
+    {% else %}
+    <p style="color:var(--muted)">Игроков пока нет.</p>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}

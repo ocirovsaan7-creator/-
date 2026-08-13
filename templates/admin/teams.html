@@ -1,0 +1,75 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Команды{% endblock %}
+{% block admin_content %}
+<div class="section-title">
+  <h1 style="font-size:22px;margin:0">Команды</h1>
+  <label for="modal-add-team" class="btn btn-accent btn-sm">+ Добавить команду</label>
+</div>
+
+<table>
+  <thead><tr><th>Лого</th><th>Название</th><th>Игра</th><th>Город</th><th>Статус</th><th></th></tr></thead>
+  <tbody>
+    {% for t in teams %}
+    <tr>
+      <td><img class="thumb-sm" src="{{ url_for('static', filename=t.logo) if t.logo else 'https://placehold.co/40x40/1b1f28/8b93a1?text=?' }}"></td>
+      <td>{{ t.name }} {% if t.tag %}[{{ t.tag }}]{% endif %}</td>
+      <td>{{ t.game or '—' }}</td>
+      <td>{{ t.city }}</td>
+      <td>
+        {% if t.approved %}<span class="status-badge status-approved">Одобрена</span>
+        {% else %}<span class="status-badge status-pending">На проверке</span>{% endif %}
+      </td>
+      <td style="white-space:nowrap">
+        {% if not t.approved %}
+        <form method="post" action="{{ url_for('admin_teams_approve', team_id=t.id) }}" style="display:inline">
+          <button class="btn btn-green btn-sm">✓ Одобрить</button>
+        </form>
+        {% endif %}
+        <label for="modal-edit-team-{{ t.id }}" class="btn btn-outline btn-sm">✎</label>
+        <form method="post" action="{{ url_for('admin_teams_delete', team_id=t.id) }}" style="display:inline" onsubmit="return confirm('Удалить команду?')">
+          <button class="btn btn-red btn-sm">✕</button>
+        </form>
+      </td>
+    </tr>
+
+    <input type="checkbox" id="modal-edit-team-{{ t.id }}" class="modal-toggle">
+    <div class="modal">
+      <div class="modal-box">
+        <label for="modal-edit-team-{{ t.id }}" class="modal-close">✕</label>
+        <h3>Редактировать: {{ t.name }}</h3>
+        <form method="post" action="{{ url_for('admin_teams_edit', team_id=t.id) }}" enctype="multipart/form-data">
+          <label>Название</label><input type="text" name="name" value="{{ t.name }}" required>
+          <label>Тег</label><input type="text" name="tag" value="{{ t.tag or '' }}">
+          <label>Игра</label><input type="text" name="game" value="{{ t.game or '' }}">
+          <label>Город</label><input type="text" name="city" value="{{ t.city or '' }}">
+          <label>Описание</label><textarea name="description" rows="3">{{ t.description or '' }}</textarea>
+          <label>Контакт</label><input type="text" name="contact" value="{{ t.contact or '' }}">
+          <label>Новый логотип (необязательно)</label><input type="file" name="logo" accept="image/*">
+          <button class="btn btn-accent" style="margin-top:16px;width:100%">Сохранить</button>
+        </form>
+      </div>
+    </div>
+    {% else %}
+    <tr><td colspan="6" style="color:var(--muted)">Команд пока нет.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<input type="checkbox" id="modal-add-team" class="modal-toggle">
+<div class="modal">
+  <div class="modal-box">
+    <label for="modal-add-team" class="modal-close">✕</label>
+    <h3>Добавить команду</h3>
+    <form method="post" action="{{ url_for('admin_teams_add') }}" enctype="multipart/form-data">
+      <label>Название *</label><input type="text" name="name" required>
+      <label>Тег</label><input type="text" name="tag">
+      <label>Игра</label><input type="text" name="game">
+      <label>Город</label><input type="text" name="city" value="Улан-Удэ">
+      <label>Описание</label><textarea name="description" rows="3"></textarea>
+      <label>Контакт</label><input type="text" name="contact">
+      <label>Логотип</label><input type="file" name="logo" accept="image/*">
+      <button class="btn btn-accent" style="margin-top:16px;width:100%">Добавить команду</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

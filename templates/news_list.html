@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Новости — Buryatia Esports{% endblock %}
+{% block content %}
+<section class="container">
+  <div class="section-title"><h2>Все новости</h2></div>
+  <div class="grid grid-3">
+    {% for item in news %}
+    <a href="{{ url_for('news_detail', news_id=item.id) }}" class="card">
+      <img class="card-img" src="{{ url_for('static', filename=item.cover) if item.cover else 'https://placehold.co/400x200/1b1f28/8b93a1?text=Новость' }}">
+      <div class="card-body">
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.summary or '' }}</p>
+        <div class="meta">{{ item.published_at.strftime('%d.%m.%Y') }}</div>
+      </div>
+    </a>
+    {% else %}
+    <p style="color:var(--muted)">Новостей пока нет.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ item.title }}{% endblock %}
+{% block content %}
+<section class="container" style="max-width:760px">
+  <img style="width:100%;border-radius:10px;margin-bottom:20px" src="{{ url_for('static', filename=item.cover) if item.cover else 'https://placehold.co/760x360/1b1f28/8b93a1?text=Новость' }}">
+  <h1>{{ item.title }}</h1>
+  <div class="meta" style="margin-bottom:20px">{{ item.published_at.strftime('%d.%m.%Y %H:%M') }}</div>
+  <div style="white-space:pre-line;color:var(--text);font-size:15px">{{ item.content }}</div>
+  <p style="margin-top:30px"><a href="{{ url_for('news_list') }}" class="btn btn-outline">← Все новости</a></p>
+</section>
+{% endblock %}

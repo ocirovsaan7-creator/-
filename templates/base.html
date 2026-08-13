@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Киберспорт Бурятии{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="{{ url_for('index') }}" class="logo">BURYATIA<span>ESPORTS</span></a>
+    <nav class="mainnav">
+      <a href="{{ url_for('index') }}">Главная</a>
+      <a href="{{ url_for('news_list') }}">Новости</a>
+      <a href="{{ url_for('players_list') }}">Игроки</a>
+      <a href="{{ url_for('teams_list') }}">Команды</a>
+      <a href="{{ url_for('tournaments_list') }}">Турниры</a>
+    </nav>
+    <a href="{{ url_for('team_register') }}" class="btn btn-accent">Регистрация команды</a>
+  </div>
+</header>
+
+<main>
+  <div class="container" style="padding-top:20px">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ 'success' if category=='success' else 'error' }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+  {% block content %}{% endblock %}
+</main>
+
+<footer>
+  <div class="container">
+    Buryatia Esports © 2026 — платформа местного киберспорта Республики Бурятия
+  </div>
+</footer>
+
+</body>
+</html>

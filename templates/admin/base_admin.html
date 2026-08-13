@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Админка{% endblock %} — Buryatia Esports</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="admin-shell">
+  <div class="admin-sidebar">
+    <a href="{{ url_for('index') }}" class="logo">BURYATIA<span style="color:var(--accent)">ESPORTS</span></a>
+    <a href="{{ url_for('admin_dashboard') }}" class="{{ 'active' if request.endpoint=='admin_dashboard' }}">📊 Дашборд</a>
+    <a href="{{ url_for('admin_news') }}" class="{{ 'active' if request.endpoint=='admin_news' }}">📰 Новости</a>
+    <a href="{{ url_for('admin_players') }}" class="{{ 'active' if request.endpoint=='admin_players' }}">🎮 Игроки</a>
+    <a href="{{ url_for('admin_teams') }}" class="{{ 'active' if request.endpoint=='admin_teams' }}">🛡 Команды</a>
+    <a href="{{ url_for('admin_tournaments') }}" class="{{ 'active' if request.endpoint=='admin_tournaments' }}">🏆 Турниры</a>
+    <hr style="border-color:var(--border);margin:16px 0">
+    <a href="{{ url_for('index') }}">🌐 На сайт</a>
+    <a href="{{ url_for('admin_logout') }}">🚪 Выйти</a>
+  </div>
+  <div class="admin-content">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ 'success' if category=='success' else 'error' }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% block admin_content %}{% endblock %}
+  </div>
+</div>
+</body>
+</html>

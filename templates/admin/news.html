@@ -1,0 +1,59 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Новости{% endblock %}
+{% block admin_content %}
+<div class="section-title">
+  <h1 style="font-size:22px;margin:0">Новости</h1>
+  <label for="modal-add-news" class="btn btn-accent btn-sm">+ Добавить новость</label>
+</div>
+
+<table>
+  <thead><tr><th>Обложка</th><th>Заголовок</th><th>Дата</th><th></th></tr></thead>
+  <tbody>
+    {% for n in news %}
+    <tr>
+      <td><img class="thumb-sm" src="{{ url_for('static', filename=n.cover) if n.cover else 'https://placehold.co/40x40/1b1f28/8b93a1?text=N' }}"></td>
+      <td>{{ n.title }}</td>
+      <td>{{ n.published_at.strftime('%d.%m.%Y') }}</td>
+      <td style="white-space:nowrap">
+        <label for="modal-edit-news-{{ n.id }}" class="btn btn-outline btn-sm">✎</label>
+        <form method="post" action="{{ url_for('admin_news_delete', news_id=n.id) }}" style="display:inline" onsubmit="return confirm('Удалить новость?')">
+          <button class="btn btn-red btn-sm">✕</button>
+        </form>
+      </td>
+    </tr>
+
+    <input type="checkbox" id="modal-edit-news-{{ n.id }}" class="modal-toggle">
+    <div class="modal">
+      <div class="modal-box">
+        <label for="modal-edit-news-{{ n.id }}" class="modal-close">✕</label>
+        <h3>Редактировать новость</h3>
+        <form method="post" action="{{ url_for('admin_news_edit', news_id=n.id) }}" enctype="multipart/form-data">
+          <label>Заголовок</label><input type="text" name="title" value="{{ n.title }}" required>
+          <label>Краткое описание</label><input type="text" name="summary" value="{{ n.summary or '' }}">
+          <label>Текст новости</label><textarea name="content" rows="6">{{ n.content or '' }}</textarea>
+          <label>Новая обложка (необязательно)</label><input type="file" name="cover" accept="image/*">
+          <button class="btn btn-accent" style="margin-top:16px;width:100%">Сохранить</button>
+        </form>
+      </div>
+    </div>
+    {% else %}
+    <tr><td colspan="4" style="color:var(--muted)">Новостей пока нет.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<input type="checkbox" id="modal-add-news" class="modal-toggle">
+<div class="modal">
+  <div class="modal-box">
+    <label for="modal-add-news" class="modal-close">✕</label>
+    <h3>Добавить новость</h3>
+    <form method="post" action="{{ url_for('admin_news_add') }}" enctype="multipart/form-data">
+      <label>Заголовок *</label><input type="text" name="title" required>
+      <label>Краткое описание</label><input type="text" name="summary">
+      <label>Текст новости</label><textarea name="content" rows="6"></textarea>
+      <label>Обложка</label><input type="file" name="cover" accept="image/*">
+      <button class="btn btn-accent" style="margin-top:16px;width:100%">Опубликовать</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

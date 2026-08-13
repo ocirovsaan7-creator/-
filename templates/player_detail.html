@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ player.nickname }} — Buryatia Esports{% endblock %}
+{% block content %}
+<section class="container" style="max-width:760px">
+  <div class="card" style="padding:24px;display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+    <img style="width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid var(--accent)"
+         src="{{ url_for('static', filename=player.photo) if player.photo else 'https://placehold.co/120x120/1b1f28/8b93a1?text=?' }}">
+    <div>
+      <h1 style="margin:0">{{ player.nickname }}</h1>
+      <p style="color:var(--muted);margin:4px 0">{{ player.real_name or '' }}</p>
+      <p style="margin:4px 0">
+        {% if player.team %}<a class="tag" href="{{ url_for('team_detail', team_id=player.team.id) }}">{{ player.team.name }}</a>{% endif %}
+        <span class="tag">{{ player.game or '—' }}</span>
+        <span class="tag">{{ player.role or '—' }}</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="grid grid-4" style="margin-top:24px">
+    <div class="stat-box"><div class="num">{{ '%.2f'|format(player.rating) }}</div><div class="label">Rating</div></div>
+    <div class="stat-box"><div class="num">{{ '%.2f'|format(player.kd) }}</div><div class="label">K/D</div></div>
+    <div class="stat-box"><div class="num">{{ player.maps_played }}</div><div class="label">Карт сыграно</div></div>
+    <div class="stat-box"><div class="num">{{ player.wins }}</div><div class="label">Побед</div></div>
+  </div>
+
+  <p style="margin-top:30px"><a href="{{ url_for('players_list') }}" class="btn btn-outline">← Все игроки</a></p>
+</section>
+{% endblock %}

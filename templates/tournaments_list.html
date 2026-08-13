@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Турниры — Buryatia Esports{% endblock %}
+{% block content %}
+<section class="container">
+  <div class="section-title"><h2>Турниры</h2></div>
+  <div class="grid grid-3">
+    {% for t in tournaments %}
+    <a href="{{ url_for('tournament_detail', tournament_id=t.id) }}" class="card">
+      <img class="card-img" src="{{ url_for('static', filename=t.cover) if t.cover else 'https://placehold.co/400x200/1b1f28/ff6a00?text=Турнир' }}">
+      <div class="card-body">
+        <span class="status-badge status-{{ t.status }}">
+          {{ {'upcoming':'Скоро','ongoing':'Идёт','finished':'Завершён'}[t.status] }}
+        </span>
+        <h3>{{ t.title }}</h3>
+        <p>{{ t.game or '' }} · Призовой фонд: {{ t.prize_pool or '—' }}</p>
+        <div class="meta">
+          {{ t.start_date.strftime('%d.%m.%Y') if t.start_date else '' }}
+          {% if t.end_date %} – {{ t.end_date.strftime('%d.%m.%Y') }}{% endif %}
+        </div>
+      </div>
+    </a>
+    {% else %}
+    <p style="color:var(--muted)">Турниров пока нет.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

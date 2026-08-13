@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{ tournament.title }}{% endblock %}
+{% block content %}
+<section class="container" style="max-width:820px">
+  <img style="width:100%;border-radius:10px;margin-bottom:20px;max-height:320px;object-fit:cover"
+       src="{{ url_for('static', filename=tournament.cover) if tournament.cover else 'https://placehold.co/820x300/1b1f28/ff6a00?text=Турнир' }}">
+
+  <span class="status-badge status-{{ tournament.status }}">
+    {{ {'upcoming':'Скоро','ongoing':'Идёт','finished':'Завершён'}[tournament.status] }}
+  </span>
+  <h1>{{ tournament.title }}</h1>
+  <p style="color:var(--muted)">
+    {{ tournament.game or '' }} · Призовой фонд: {{ tournament.prize_pool or '—' }} ·
+    {{ tournament.start_date.strftime('%d.%m.%Y') if tournament.start_date else '' }}
+    {% if tournament.end_date %} – {{ tournament.end_date.strftime('%d.%m.%Y') }}{% endif %}
+  </p>
+
+  {% if tournament.description %}
+  <div class="card" style="padding:20px;margin:20px 0;white-space:pre-line">{{ tournament.description }}</div>
+  {% endif %}
+
+  <div class="section-title" style="margin-top:30px"><h2>Регистрация команды на турнир</h2></div>
+  <form class="form-box" method="post" action="{{ url_for('tournament_register', tournament_id=tournament.id) }}">
+    <label>Выберите вашу команду *</label>
+    <select name="team_id" required>
+      <option value="">— выберите —</option>
+      {% for team in teams %}
+      <option value="{{ team.id }}">{{ team.name }}</option>
+      {% endfor %}
+    </select>
+    <button class="btn btn-accent" style="margin-top:16px;width:100%">Отправить заявку на турнир</button>
+    <p style="color:var(--muted);font-size:12px;margin-top:10px">
+      Не нашли команду в списке? <a href="{{ url_for('team_register') }}" style="color:var(--accent2)">Зарегистрируйте её сначала</a>.
+    </p>
+  </form>
+
+  <div class="section-title" style="margin-top:30px"><h2>Заявленные команды</h2></div>
+  <table>
+    <thead><tr><th>Команда</th><th>Статус</th></tr></thead>
+    <tbody>
+      {% for reg in tournament.registrations %}
+      <tr>
+        <td>{{ reg.team.name }}</td>
+        <td><span class="status-badge status-{{ reg.status }}">
+          {{ {'pending':'Ожидает','approved':'Принята','rejected':'Отклонена'}[reg.status] }}
+        </span></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="2" style="color:var(--muted)">Пока нет заявок.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <p style="margin-top:30px"><a href="{{ url_for('tournaments_list') }}" class="btn btn-outline">← Все турниры</a></p>
+</section>
+{% endblock %}

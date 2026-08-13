@@ -1,0 +1,111 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Турниры{% endblock %}
+{% block admin_content %}
+<div class="section-title">
+  <h1 style="font-size:22px;margin:0">Турниры</h1>
+  <label for="modal-add-tournament" class="btn btn-accent btn-sm">+ Добавить турнир</label>
+</div>
+
+<table>
+  <thead><tr><th>Название</th><th>Игра</th><th>Даты</th><th>Статус</th><th>Заявок</th><th></th></tr></thead>
+  <tbody>
+    {% for t in tournaments %}
+    <tr>
+      <td>{{ t.title }}</td>
+      <td>{{ t.game or '—' }}</td>
+      <td>{{ t.start_date.strftime('%d.%m.%Y') if t.start_date else '—' }}</td>
+      <td><span class="status-badge status-{{ t.status }}">{{ {'upcoming':'Скоро','ongoing':'Идёт','finished':'Завершён'}[t.status] }}</span></td>
+      <td>{{ t.registrations|length }}</td>
+      <td style="white-space:nowrap">
+        <label for="modal-regs-{{ t.id }}" class="btn btn-outline btn-sm">Заявки</label>
+        <label for="modal-edit-t-{{ t.id }}" class="btn btn-outline btn-sm">✎</label>
+        <form method="post" action="{{ url_for('admin_tournaments_delete', tournament_id=t.id) }}" style="display:inline" onsubmit="return confirm('Удалить турнир?')">
+          <button class="btn btn-red btn-sm">✕</button>
+        </form>
+      </td>
+    </tr>
+
+    <!-- Registrations modal -->
+    <input type="checkbox" id="modal-regs-{{ t.id }}" class="modal-toggle">
+    <div class="modal">
+      <div class="modal-box">
+        <label for="modal-regs-{{ t.id }}" class="modal-close">✕</label>
+        <h3>Заявки: {{ t.title }}</h3>
+        <table>
+          <thead><tr><th>Команда</th><th>Статус</th><th></th></tr></thead>
+          <tbody>
+            {% for reg in t.registrations %}
+            <tr>
+              <td>{{ reg.team.name }}</td>
+              <td><span class="status-badge status-{{ reg.status }}">{{ {'pending':'Ожидает','approved':'Принята','rejected':'Отклонена'}[reg.status] }}</span></td>
+              <td style="white-space:nowrap">
+                <form method="post" action="{{ url_for('admin_registration_action', reg_id=reg.id, action='approve') }}" style="display:inline">
+                  <button class="btn btn-green btn-sm">✓</button>
+                </form>
+                <form method="post" action="{{ url_for('admin_registration_action', reg_id=reg.id, action='reject') }}" style="display:inline">
+                  <button class="btn btn-red btn-sm">✕</button>
+                </form>
+              </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="3" style="color:var(--muted)">Заявок нет.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Edit modal -->
+    <input type="checkbox" id="modal-edit-t-{{ t.id }}" class="modal-toggle">
+    <div class="modal">
+      <div class="modal-box">
+        <label for="modal-edit-t-{{ t.id }}" class="modal-close">✕</label>
+        <h3>Редактировать: {{ t.title }}</h3>
+        <form method="post" action="{{ url_for('admin_tournaments_edit', tournament_id=t.id) }}" enctype="multipart/form-data">
+          <label>Название</label><input type="text" name="title" value="{{ t.title }}" required>
+          <label>Игра</label><input type="text" name="game" value="{{ t.game or '' }}">
+          <label>Описание</label><textarea name="description" rows="3">{{ t.description or '' }}</textarea>
+          <label>Призовой фонд</label><input type="text" name="prize_pool" value="{{ t.prize_pool or '' }}">
+          <label>Дата начала</label><input type="date" name="start_date" value="{{ t.start_date.isoformat() if t.start_date else '' }}">
+          <label>Дата окончания</label><input type="date" name="end_date" value="{{ t.end_date.isoformat() if t.end_date else '' }}">
+          <label>Статус</label>
+          <select name="status">
+            <option value="upcoming" {{ 'selected' if t.status=='upcoming' }}>Скоро</option>
+            <option value="ongoing" {{ 'selected' if t.status=='ongoing' }}>Идёт</option>
+            <option value="finished" {{ 'selected' if t.status=='finished' }}>Завершён</option>
+          </select>
+          <label>Новая обложка (необязательно)</label><input type="file" name="cover" accept="image/*">
+          <button class="btn btn-accent" style="margin-top:16px;width:100%">Сохранить</button>
+        </form>
+      </div>
+    </div>
+    {% else %}
+    <tr><td colspan="6" style="color:var(--muted)">Турниров пока нет.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<input type="checkbox" id="modal-add-tournament" class="modal-toggle">
+<div class="modal">
+  <div class="modal-box">
+    <label for="modal-add-tournament" class="modal-close">✕</label>
+    <h3>Добавить турнир</h3>
+    <form method="post" action="{{ url_for('admin_tournaments_add') }}" enctype="multipart/form-data">
+      <label>Название *</label><input type="text" name="title" required>
+      <label>Игра</label><input type="text" name="game">
+      <label>Описание</label><textarea name="description" rows="3"></textarea>
+      <label>Призовой фонд</label><input type="text" name="prize_pool" placeholder="50 000 ₽">
+      <label>Дата начала</label><input type="date" name="start_date">
+      <label>Дата окончания</label><input type="date" name="end_date">
+      <label>Статус</label>
+      <select name="status">
+        <option value="upcoming">Скоро</option>
+        <option value="ongoing">Идёт</option>
+        <option value="finished">Завершён</option>
+      </select>
+      <label>Обложка</label><input type="file" name="cover" accept="image/*">
+      <button class="btn btn-accent" style="margin-top:16px;width:100%">Создать турнир</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

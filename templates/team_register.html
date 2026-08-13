@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Регистрация команды{% endblock %}
+{% block content %}
+<section class="container">
+  <div class="section-title"><h2>Регистрация команды на сайте</h2></div>
+  <form class="form-box" method="post" enctype="multipart/form-data">
+    <label>Название команды *</label>
+    <input type="text" name="name" required>
+
+    <label>Тег команды</label>
+    <input type="text" name="tag" placeholder="Например: BRT">
+
+    <label>Игра</label>
+    <input type="text" name="game" placeholder="CS2 / Dota 2 / Valorant...">
+
+    <label>Город</label>
+    <input type="text" name="city" value="Улан-Удэ">
+
+    <label>Описание команды</label>
+    <textarea name="description" rows="4"></textarea>
+
+    <label>Контакт (Telegram / VK / email)</label>
+    <input type="text" name="contact">
+
+    <label>Логотип команды</label>
+    <input type="file" name="logo" accept="image/*">
+
+    <button class="btn btn-accent" style="margin-top:18px;width:100%">Отправить заявку на регистрацию</button>
+    <p style="color:var(--muted);font-size:12px;margin-top:10px">
+      Заявка будет проверена модератором перед публикацией на сайте.
+    </p>
+  </form>
+</section>
+{% endblock %}

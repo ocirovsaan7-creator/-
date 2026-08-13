@@ -1,0 +1,29 @@
+{% extends "admin/base_admin.html" %}
+{% block title %}Дашборд{% endblock %}
+{% block admin_content %}
+<h1>Дашборд</h1>
+<div class="grid grid-4">
+  <div class="stat-box"><div class="num">{{ stats.players }}</div><div class="label">Игроков</div></div>
+  <div class="stat-box"><div class="num">{{ stats.teams }}</div><div class="label">Команд</div></div>
+  <div class="stat-box"><div class="num">{{ stats.tournaments }}</div><div class="label">Турниров</div></div>
+  <div class="stat-box"><div class="num">{{ stats.news }}</div><div class="label">Новостей</div></div>
+</div>
+<div class="grid grid-2" style="margin-top:16px">
+  <div class="stat-box" style="border-color:#e0c25b">
+    <div class="num" style="color:#e0c25b">{{ stats.pending_teams }}</div>
+    <div class="label">Команд ожидают одобрения</div>
+  </div>
+  <div class="stat-box" style="border-color:#e0c25b">
+    <div class="num" style="color:#e0c25b">{{ stats.pending_regs }}</div>
+    <div class="label">Заявок на турниры ожидают</div>
+  </div>
+</div>
+
+<div class="section-title" style="margin-top:30px"><h2>Быстрые действия</h2></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+  <a href="{{ url_for('admin_news') }}" class="btn btn-accent">+ Новость</a>
+  <a href="{{ url_for('admin_players') }}" class="btn btn-outline">+ Игрок</a>
+  <a href="{{ url_for('admin_teams') }}" class="btn btn-outline">+ Команда</a>
+  <a href="{{ url_for('admin_tournaments') }}" class="btn btn-outline">+ Турнир</a>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Игроки — Buryatia Esports{% endblock %}
+{% block content %}
+<section class="container">
+  <div class="section-title"><h2>Рейтинг игроков</h2></div>
+
+  <div style="margin-bottom:16px">
+    <a href="{{ url_for('players_list') }}" class="btn btn-sm {{ 'btn-accent' if not current_game else 'btn-outline' }}">Все игры</a>
+    {% for g in games %}
+      <a href="{{ url_for('players_list', game=g) }}" class="btn btn-sm {{ 'btn-accent' if current_game==g else 'btn-outline' }}">{{ g }}</a>
+    {% endfor %}
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>#</th><th>Игрок</th><th>Игра</th><th>Команда</th><th>Rating</th><th>K/D</th><th>Карт</th><th>Побед</th></tr>
+    </thead>
+    <tbody>
+      {% for p in players %}
+      <tr onclick="location.href='{{ url_for('player_detail', player_id=p.id) }}'" style="cursor:pointer">
+        <td>{{ loop.index }}</td>
+        <td style="display:flex;align-items:center;gap:10px">
+          <img class="thumb-round" src="{{ url_for('static', filename=p.photo) if p.photo else 'https://placehold.co/40x40/1b1f28/8b93a1?text=?' }}">
+          {{ p.nickname }}
+        </td>
+        <td>{{ p.game or '—' }}</td>
+        <td>{{ p.team.name if p.team else '—' }}</td>
+        <td style="color:var(--green);font-weight:700">{{ '%.2f'|format(p.rating) }}</td>
+        <td>{{ '%.2f'|format(p.kd) }}</td>
+        <td>{{ p.maps_played }}</td>
+        <td>{{ p.wins }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="8" style="color:var(--muted)">Игроков пока нет.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}
