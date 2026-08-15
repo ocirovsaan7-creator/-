@@ -65,6 +65,11 @@ nav.mainnav a:hover,nav.mainnav a.active{color:var(--text);border-color:var(--ac
 .hero h1{font-size:34px;margin:0 0 8px;}
 .hero h1 span{color:var(--accent)}
 .hero p{color:var(--muted);max-width:600px;margin:0}
+@media(max-width:600px){
+  .hero{padding:32px 0}
+  .hero h1{font-size:26px}
+  .hero p{font-size:14px}
+}
 
 /* SECTIONS */
 section{padding:40px 0}
