@@ -1,7 +1,11 @@
-meta:
-  environment: python
-  toolchain:
-    name: pip
-run:
-  command: gunicorn --bind 0.0.0.0:5000 app:app
-  containerPort: 5000
+runtime: python3.11
+
+serve:
+  - type: python
+    callable: arteriya.wsgi:application
+    envs:
+      DEBUG: "false"
+      ALLOWED_HOSTS: "*.amvera.io,localhost,127.0.0.1"
+  - type: static
+    source: static
+    target: /static
